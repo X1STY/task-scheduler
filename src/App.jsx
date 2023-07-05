@@ -1,10 +1,11 @@
 import {Route, Routes} from 'react-router-dom'
 
 import Home from './pages/Home'
-import Login from './pages/Login'
+import Login from './pages/Auth/Login/Login'
 import Scheduler from './pages/Scheduler'
 import Notfound from './pages/Notfound'
 import TaskForm from './components/taskForm/TaskForm'
+import Signup from './pages/Auth/Signup/Signup'
 
 
 const tasks = [
@@ -21,6 +22,7 @@ function App() {
         <Route path='/' element={<Home/> } />
         <Route path='/task-form' element={<TaskForm/> } />
         <Route path='/login' element={<Login/> } />
+        <Route path='/signup' element={<Signup/> } />
         <Route path='/scheduler' element={<Scheduler tasks={tasks}/> } />
         <Route path='*' element={<Notfound/> } />
 
