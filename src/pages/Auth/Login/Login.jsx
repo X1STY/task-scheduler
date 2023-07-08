@@ -2,9 +2,9 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
-import { useForm, SubmitHandler, Controller, useFormState } from "react-hook-form";
+import { useForm, Controller, useFormState } from "react-hook-form";
 import './Login.css';
-import {emailValidation, passwordValidation} from "./validation";
+import {emailValidation, passwordValidation} from "./validation.js";
 
 const Login = () => {
     const {handleSubmit, control} = useForm();
@@ -12,7 +12,7 @@ const Login = () => {
         control
     });
     const navigate = useNavigate()
-    const onSubmit: SubmitHandler = (data) => console.log(data);
+    const onSubmit = (data) => console.log(data);
 
     return (
         <div className = "login-form">
@@ -60,6 +60,7 @@ const Login = () => {
                     disableElevation={true}
                     sx={{
                         bgcolor: '#93B492',
+                            ':hover': { backgroundColor: '#6d8c6c' },
                         marginTop: 2
                     }}
                 >
@@ -67,7 +68,7 @@ const Login = () => {
                 </Button>
 
                 <Typography textAlign="center" variant="body2" margin={2}>
-                    Don't have an account? <span className='link' onClick={() => navigate('/signup')}>Sign up</span>
+                    Do not have an account? <span className='link' onClick={() => navigate('/signup')}>Sign up</span>
                 </Typography>
             </form>
         </div>

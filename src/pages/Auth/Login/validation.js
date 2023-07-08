@@ -2,7 +2,7 @@ const REQUIRED_FIELD = 'Обязательно для заполнения';
 
 export const emailValidation = {
     required: REQUIRED_FIELD,
-    validate: (value: string) => {
+    validate: (value) => {
         if(value.match(/[а-яА-Я]/)) {
             return 'Логин не может содержать русские буквы'
         }
@@ -13,7 +13,7 @@ export const emailValidation = {
 
 export const passwordValidation = {
     required: REQUIRED_FIELD,
-    validate: (value: string) => {
+    validate: (value) => {
         if(value.length < 6) {
             return 'Пароль должен быть длиннее 6-ти символов'
         }

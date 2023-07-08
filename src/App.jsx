@@ -4,7 +4,7 @@ import HeaderBar from './components/headerBar/HeaderBar'
 import Scheduler from './pages/Scheduler'
 import Notfound from './pages/Notfound'
 import TaskForm from './components/taskForm/TaskForm'
-import Login from './pages/Auth/Login/Login'
+import Login from './pages/Auth/Login/Login.jsx'
 import Signup from './pages/Auth/Signup/Signup'
 import AuthRouter from './components/authRouter/AuthRouter'
 
