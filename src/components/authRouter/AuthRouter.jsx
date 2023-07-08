@@ -1,17 +1,8 @@
-import { useContext } from 'react'
-import { Navigate, Outlet } from 'react-router-dom'
-
-import AuthContext from '../../context/AuthProvider'
+import { Navigate, Outlet } from 'react-router-dom';
 
 const AuthRouter = () => {
+  const token = localStorage.getItem('token');
+  return token ? <Outlet /> : <Navigate to='/login' />;
+};
 
-    const { auth } = useContext(AuthContext)
-
-    return (
-        auth?.fullName ? 
-            <Outlet /> :
-            <Navigate to='/login' />
-    )
-}
-
-export default AuthRouter
+export default AuthRouter;
