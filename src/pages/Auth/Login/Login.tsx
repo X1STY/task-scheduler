@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler, Controller, useFormState } from "react-hook-form";
 import './Login.css';
 import {emailValidation, passwordValidation} from "./validation";
+import React from 'react';
 
 const Login = () => {
     const {handleSubmit, control} = useForm();
