@@ -1,0 +1,13 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100vw;
+  height: 90vh;
+}
+.link {
+  color: #0000ee;
+  cursor: pointer;
+}
