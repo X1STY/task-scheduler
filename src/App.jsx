@@ -1,7 +1,7 @@
 import {Route, Routes} from 'react-router-dom'
 
 import Home from './pages/Home'
-import Login from './pages/Login'
+import Login from './pages/Auth/Login/Login'
 import Scheduler from './pages/Scheduler'
 import Notfound from './pages/Notfound'
 import TaskForm from './components/taskForm/TaskForm'

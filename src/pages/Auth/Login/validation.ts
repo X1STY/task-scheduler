@@ -15,7 +15,7 @@ export const passwordValidation = {
     required: REQUIRED_FIELD,
     validate: (value: string) => {
         if(value.length < 6) {
-            return 'Пароль должен длиннее 6-ти символов'
+            return 'Пароль должен быть длиннее 6-ти символов'
         }
 
         return true;

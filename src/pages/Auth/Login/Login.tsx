@@ -6,18 +6,13 @@ import { useForm, SubmitHandler, Controller, useFormState } from "react-hook-for
 import './Login.css';
 import {emailValidation, passwordValidation} from "./validation";
 
-interface ISignInForm {
-    email: string;
-    password: string;
-}
-
-const Login: React.FC = () => {
-    const {handleSubmit, control} = useForm<ISignInForm>();
+const Login = () => {
+    const {handleSubmit, control} = useForm();
     const { errors } = useFormState({
         control
     });
     const navigate = useNavigate()
-    const onSubmit: SubmitHandler<ISignInForm> = (data) => console.log(data);
+    const onSubmit: SubmitHandler = (data) => console.log(data);
 
     return (
         <div className = "login-form">
@@ -26,7 +21,7 @@ const Login: React.FC = () => {
                     control={control}
                     name="email"
                     rules={emailValidation}
-                    render={(field) => (
+                    render={({field}) => (
                         <TextField
                             label="Enter email"
                             onChange={(e) => field.onChange(e)}
@@ -44,7 +39,7 @@ const Login: React.FC = () => {
                     control={control}
                     name="password"
                     rules={passwordValidation}
-                    render={(field) => (
+                    render={({field}) => (
                         <TextField
                             label="Enter password"
                             onChange={(e) => field.onChange(e)}
@@ -64,13 +59,14 @@ const Login: React.FC = () => {
                     fullWidth={true}
                     disableElevation={true}
                     sx={{
+                        bgcolor: '#93B492',
                         marginTop: 2
                     }}
                 >
                     Sign in
                 </Button>
 
-                <Typography textAlign="center" variant="body2">
+                <Typography textAlign="center" variant="body2" margin={2}>
                     Don't have an account? <span className='link' onClick={() => navigate('/signup')}>Sign up</span>
                 </Typography>
             </form>
