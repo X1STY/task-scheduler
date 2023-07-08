@@ -1,6 +1,3 @@
-import  { SubmitButton }  from '../Buttons/SubmitButton/submitButton.jsx';
-import { InputField } from '../Input/inputField.jsx';
-
 
 import styles from './TaskForm.module.css';
 
@@ -37,10 +34,7 @@ const TaskForm = () => {
         id='description'
         name='description'
         required
-      />
-
-      <InputField />
-      <SubmitButton />      
+      />    
 
     </form>
   );
