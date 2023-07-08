@@ -1,10 +1,11 @@
-import { createTheme } from '@mui/material'
+import { createTheme } from '@mui/material';
 export const theme = createTheme({
-    palette: {
-        general: {
-          purple: '#6200EE',
-        },
+  palette: {
+    general: {
+      lightGreen: '#93B492',
+      hoverGreen: '#6d8c6c'
     }
+  }
 });
 
-export default theme
+export default theme;
