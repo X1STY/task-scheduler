@@ -15,7 +15,7 @@ const HeaderBar = () => {
     <>
       <header>
         <Box sx={{ flexGrow: 1 }}>
-          <AppBar position='static' sx={{ bgcolor: 'general.lightGreen' }}>
+          <AppBar position='fixed' sx={{ bgcolor: 'general.lightGreen' }}>
             <Toolbar>
               <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
                 Plankton
