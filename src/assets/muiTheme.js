@@ -1,9 +1,10 @@
 import { createTheme } from '@mui/material';
 export const theme = createTheme({
+  spacing: 2,
   palette: {
     general: {
       lightGreen: '#93B492',
-      hoverGreen: '#6d8c6c'
+      hoverGreen: '#758774'
     }
   }
 });
