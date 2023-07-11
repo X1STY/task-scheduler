@@ -1,13 +1,19 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
 
-const HeaderBar = () => {
-  const isAuth = localStorage.getItem('token');
+import { useAuthContext } from '../../contexts/auth/useAuthContext';
 
+const HeaderBar = () => {
+  //const isAuth = localStorage.getItem('token');
+  const { auth, setAuth } = useAuthContext();
   const navigate = useNavigate();
+
+  const isAuth = auth.isAuth;
 
   const logoutFun = () => {
     localStorage.removeItem('token');
+    setAuth({ token: null, isAuth: false });
+    console.log(auth);
     navigate('/login');
   };
 

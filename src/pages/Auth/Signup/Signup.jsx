@@ -1,74 +1,71 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Stack, TextField, Typography } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 
-import instance from '../../../utils/api/instance';
+import { useAuthContext } from '../../../contexts/auth/useAuthContext';
+import useForm from '../../../utils/hooks/useForm';
+import { registerUser } from '../../../utils/requests/UserAuth';
 
 import '../../../assets/Auth.css';
 
 const Signup = () => {
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
+  const { setAuth } = useAuthContext();
   const navigate = useNavigate();
-  const mutation = useMutation((user) => addUser(user));
+  const mutation = useMutation(registerUser);
 
-  //post request for backend/user and store accesToken in auth context
-  //temporary we don't have a refresh token
-  async function addUser(userData) {
-    return instance.post('/user', userData).then((response) => {
-      //localStorage.setItem('token', token)
-      localStorage.setItem('token', 'simulate token');
-      console.log(response);
-      navigate('/scheduler');
-    });
-  }
-
-  // send data to backend on form submittion
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
+  const { values, handleChange, handleSubmit } = useForm(
+    { fullName: '', email: '', password: '' },
+    async (values) => {
       const userData = {
-        full_name: fullName,
-        email,
-        password
+        full_name: values.fullName,
+        email: values.email,
+        password: values.password
       };
-      mutation.mutate(userData);
-      console.log(userData);
-    } catch (e) {
-      return e;
+      try {
+        mutation.mutate(userData, {
+          onSuccess: (response) => {
+            localStorage.setItem('token', 'simulate token');
+            setAuth({ token: 'simulate token', isAuth: true });
+            console.log(response.data);
+            navigate('/scheduler');
+          }
+        });
+      } catch (error) {
+        return error;
+      }
     }
-  };
+  );
 
   return (
     <form className='form' onSubmit={handleSubmit}>
-      <Stack spacing={2} sx={{ minWidth: 400 }}>
+      <Stack spacing={8} sx={{ minWidth: 400 }}>
         <TextField
           fullWidth={true}
           variant='outlined'
           label='Full Name'
+          name='fullName'
           required
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
+          value={values.fullName}
+          onChange={handleChange}
         />
         <TextField
           fullWidth={true}
           variant='outlined'
           label='email'
+          name='email'
           required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={values.email}
+          onChange={handleChange}
         />
         <TextField
           type='password'
           fullWidth={true}
           variant='outlined'
           label='password'
+          name='password'
           required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={values.password}
+          onChange={handleChange}
         />
         <Button
           variant='contained'
@@ -78,11 +75,10 @@ const Signup = () => {
             ':hover': { backgroundColor: 'general.hoverGreen' }
           }}
         >
-          {' '}
-          Register{' '}
+          Register
         </Button>
         <Typography textAlign='center' variant='body2'>
-          Already have an account?{' '}
+          Already have an account?
           <span className='link' onClick={() => navigate('/login')}>
             Login
           </span>

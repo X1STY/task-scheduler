@@ -5,7 +5,7 @@ import HeaderBar from './components/headerBar/HeaderBar';
 import Login from './pages/Auth/Login/Login';
 import Signup from './pages/Auth/Signup/Signup';
 import Notfound from './pages/Notfound';
-import Scheduler from './pages/Scheduler';
+import Scheduler from './pages/Scheduler/Scheduler';
 
 const App = () => {
   return (
