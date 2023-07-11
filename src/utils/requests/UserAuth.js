@@ -4,6 +4,6 @@ export const registerUser = async (userData) => {
   return await instance.post('/user', userData);
 };
 
-export const AuthorizateUser = async (userData) => {
+export const authorizateUser = async (userData) => {
   return await instance.post('/auth', userData);
 };
