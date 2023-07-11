@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import DatePicker from 'react-multi-date-picker';
 import { Button, Stack, TextField, Typography } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import Sidebar from '../../components/sideBar/SideBar';
 import useForm from '../../utils/hooks/useForm';
@@ -10,12 +10,18 @@ import { addNewEvent, getUserEvents } from '../../utils/requests/UserEvents';
 import '../../assets/Auth.css';
 
 export const Scheduler = () => {
-  const [events, setEvents] = useState([]);
-
+  const [chosenDate, setChosenDate] = useState(new Date());
+  const queryClient = useQueryClient();
+  const mutation = useMutation(addNewEvent);
   const { values, handleChange, resetForm, handleSubmit } = useForm(
     { time: '', description: '' },
     async (values) => {
-      const formattedDate = new Date(chosenDate).toISOString().split('T')[0];
+      const formattedDate = new Date(chosenDate).toLocaleDateString('ru-RU', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+
       const newEvent = {
         date: formattedDate,
         time: values.time,
@@ -24,7 +30,7 @@ export const Scheduler = () => {
       try {
         mutation.mutate(newEvent, {
           onSuccess: () => {
-            setEvents(() => [...events, newEvent]);
+            queryClient.invalidateQueries(['events']);
             resetForm();
             setChosenDate(new Date());
           }
@@ -34,27 +40,21 @@ export const Scheduler = () => {
       }
     }
   );
-  const [chosenDate, setChosenDate] = useState(new Date());
 
-  const mutation = useMutation(addNewEvent);
-
-  useEffect(() => {
-    try {
-      getUserEvents().then((response) => {
-        setEvents(response.data);
-      });
-    } catch (error) {
-      return error;
-    }
-  }, []);
+  const { data, isLoading } = useQuery(['events'], getUserEvents, {
+    refetchOnWindowFocus: false
+  });
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
       <Sidebar />
       <Stack direction='row' sx={{ ml: 110 }}>
         <Stack direction='column' sx={{ minWidth: 900, mt: 45 }}>
-          {events &&
-            events.map((event, id) => (
+          {data &&
+            data.data.map((event, id) => (
               <div key={id}>
                 <Typography variant='body1'>Date: {event.date}</Typography>
                 <Typography variant='body1'>Time: {event.time}</Typography>

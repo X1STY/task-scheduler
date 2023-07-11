@@ -18,15 +18,15 @@ const Signup = () => {
     async (values) => {
       const userData = {
         full_name: values.fullName,
-        email: values.email,
+        email: values.email.toLowerCase(),
         password: values.password
       };
       try {
         mutation.mutate(userData, {
-          onSuccess: (response) => {
+          onSuccess: (/*response*/) => {
+            //localStorage.setItem('token', response.data.token);
             localStorage.setItem('token', 'simulate token');
             setAuth({ token: 'simulate token', isAuth: true });
-            console.log(response.data);
             navigate('/scheduler');
           }
         });
