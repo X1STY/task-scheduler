@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import DatePicker from 'react-multi-date-picker';
-import { Button, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import SchedulerDisplay from '../../components/schedulerDisplay/SchedulerDisplay';
 import Sidebar from '../../components/sideBar/SideBar';
 import useForm from '../../utils/hooks/useForm';
 import { addNewEvent, getUserEvents } from '../../utils/requests/UserEvents';
@@ -50,19 +51,11 @@ export const Scheduler = () => {
 
   return (
     <>
-      <Sidebar />
-      <Stack direction='row' sx={{ ml: 110 }}>
-        <Stack direction='column' sx={{ minWidth: 900, mt: 45 }}>
-          {data &&
-            data.data.map((event, id) => (
-              <div key={id}>
-                <Typography variant='body1'>Date: {event.date}</Typography>
-                <Typography variant='body1'>Time: {event.time}</Typography>
-                <Typography variant='body1'>Description: {event.description}</Typography>
-                <br />
-              </div>
-            ))}
-        </Stack>
+      <Stack direction='row'>
+        <Sidebar />
+        <Box>
+          <SchedulerDisplay dates={data.data} />
+        </Box>
         <form
           className='form'
           onSubmit={handleSubmit}
