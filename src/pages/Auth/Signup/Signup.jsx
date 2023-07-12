@@ -23,10 +23,9 @@ const Signup = () => {
       };
       try {
         mutation.mutate(userData, {
-          onSuccess: (/*response*/) => {
-            //localStorage.setItem('token', response.data.token);
-            localStorage.setItem('token', 'simulate token');
-            setAuth({ token: 'simulate token', isAuth: true });
+          onSuccess: (response) => {
+            setAuth({ token: response.data.access_token, isAuth: true });
+            localStorage.setItem('token', response.data.access_token);
             navigate('/scheduler');
           }
         });
@@ -53,6 +52,7 @@ const Signup = () => {
           variant='outlined'
           label='email'
           name='email'
+          type='email'
           required
           value={values.email}
           onChange={handleChange}
