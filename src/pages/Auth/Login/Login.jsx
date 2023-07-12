@@ -7,29 +7,34 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {emailValidation, passwordValidation} from "./validation.js";
+import {authorizateUser} from "../../../utils/requests/UserAuth.js";
 import './Login.css';
+import {useAuthContext} from "../../../contexts/auth/useAuthContext.jsx";
 
 const Login = () => {
     const {handleSubmit, control} = useForm();
     const { errors } = useFormState({
         control
     });
+    const {setAuth} = useAuthContext();
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate()
 
-    const mutation = useMutation((data) =>
-        axios.post('https://64ad54beb470006a5ec5c676.mockapi.io/api/posts', data)
-    );
+    const mutation = useMutation(authorizateUser);
+    // const mutation = useMutation((data) =>
+    //     axios.post('http://81.177.197.88:8080', data)
+    // );
 
     const onSubmit = async (data) => {
         try {
             await mutation.mutateAsync(data);
-            const token = mutation.data.token;
+            const token = mutation.data.data.access_token;
             console.log(data);
             console.log(mutation.data);
             console.log(token);
             if (token) {
                 localStorage.setItem('token', token);
+                setAuth({token: token, isAuth: true})
             }
             navigate('/scheduler');
         }  catch (error) {

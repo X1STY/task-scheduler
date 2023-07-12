@@ -5,5 +5,5 @@ export const registerUser = async (userData) => {
 };
 
 export const authorizateUser = async (userData) => {
-  return await instance.post('/auth', userData);
+  return await instance.post('/login', userData);
 };
