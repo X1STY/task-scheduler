@@ -12,7 +12,7 @@ const sections = [
 
 const Sidebar = () => {
   return (
-    <Box sx={{ height: '100vh', width: '200px', position: 'fixed', mt: 24 }}>
+    <Box sx={{ height: '100vh', width: '12vw', position: 'fixed', mt: 24 }}>
       <>
         <Button
           variant='contained'
@@ -21,10 +21,9 @@ const Sidebar = () => {
             ':hover': { bgcolor: 'general.hoverGreen' },
             mt: 20,
             mb: 40,
-            display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            width: '190px'
+            width: '90%'
           }}
         >
           Edit user profile

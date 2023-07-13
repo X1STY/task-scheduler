@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import DatePicker from 'react-multi-date-picker';
 import { Box, Button, Stack, TextField, Typography } from '@mui/material';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { newDateToStringFormat } from '../../components/schedulerDisplay/groupEventsByDates';
 import SchedulerDisplay from '../../components/schedulerDisplay/SchedulerDisplay';
 import Sidebar from '../../components/sideBar/SideBar';
 import useForm from '../../utils/hooks/useForm';
-import { addNewEvent, getUserEvents } from '../../utils/requests/UserEvents';
+import { addNewEvent } from '../../utils/requests/UserEvents';
 
 import '../../assets/Auth.css';
 
@@ -17,15 +18,10 @@ export const Scheduler = () => {
   const { values, handleChange, resetForm, handleSubmit } = useForm(
     { time: '', description: '' },
     async (values) => {
-      const formattedDate = new Date(chosenDate).toLocaleDateString('ru-RU', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-      });
-
+      const formattedDate = newDateToStringFormat(new Date(chosenDate));
       const newEvent = {
         date: formattedDate,
-        time: values.time,
+        time: values.time + ':00',
         description: values.description
       };
       try {
@@ -42,24 +38,17 @@ export const Scheduler = () => {
     }
   );
 
-  const { data, isLoading } = useQuery(['events'], getUserEvents, {
-    refetchOnWindowFocus: false
-  });
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <>
       <Stack direction='row'>
         <Sidebar />
         <Box>
-          <SchedulerDisplay dates={data.data} />
+          <SchedulerDisplay />
         </Box>
         <form
           className='form'
           onSubmit={handleSubmit}
-          style={{ position: 'fixed', marginLeft: 250 }}
+          style={{ height: '100vh', width: '30vw', position: 'fixed', marginLeft: '65vw' }}
         >
           <Typography variant='body1'>Choose date(s):</Typography>
           <DatePicker
@@ -99,5 +88,4 @@ export const Scheduler = () => {
     </>
   );
 };
-
 export default Scheduler;
