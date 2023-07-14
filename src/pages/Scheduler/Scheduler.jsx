@@ -2,6 +2,7 @@ import { useState } from 'react';
 import DatePicker from 'react-multi-date-picker';
 import { Box, Button, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import Icon from 'react-multi-date-picker/components/icon';
 
 import { newDateToStringFormatWithDefis } from '../../components/schedulerDisplay/groupEventsByDates';
 import SchedulerDisplay from '../../components/schedulerDisplay/SchedulerDisplay';
@@ -98,62 +99,72 @@ export const Scheduler = () => {
               onSubmit={handleSubmit}
               style={{ height: '100vh', width: '30vw', position: 'fixed', marginLeft: '65vw' }}
           >
-            <Typography variant='body1'>Choose date(s):</Typography>
-            <DatePicker
-                multiple={false}
-                value={chosenDate}
-                name='chosenDate'
-                onChange={setChosenDate}
-                format='DD.MM.YYYY'
-            />
-            <Typography variant='body1'>Choose time:</Typography>
-            <input
-                placeholder='Time'
-                type='time'
-                name='time'
-                required
-                value={values.time}
-                onChange={handleChange}
-            />
-            <Typography variant='body1'>Event description</Typography>
-            <TextField
-                variant='outlined'
-                label='description'
-                name='description'
-                required
-                value={values.description}
-                onChange={handleChange}
-            />
-            <Typography variant='body1'>Repeatability</Typography>
-            <Select
-                label='arbitrary'
-                //onChange={handleChange}
-                value={repetition}
-                onChange={handleRepetitionChange}
-            >
-              <MenuItem value='one-time'>One-time</MenuItem>
-              <MenuItem value='DAILY'>Daily</MenuItem>
-              <MenuItem value='WEEKLY'>Weekly</MenuItem>
-              <MenuItem value='MONTHLY'>Monthly</MenuItem>
-              <MenuItem value='YEARLY'>Yearly</MenuItem>
-            </Select>
-            <Typography variant='body1'>Repeatability</Typography>
-            {repetition !== 'one-time' && (
-                <>
-                  <Typography variant='body1'>End date:</Typography>
-                  <DatePicker
-                      multiple={false}
-                      value={endDate}
-                      name='endDate'
-                      onChange={handleEndDateChange}
-                      format='DD.MM.YYYY'
-                  />
-                </>
-            )}
+            <Stack direction='row'>
+              <Typography variant='h5' sx={{ mr: '2vw' }} >Choose date(s): </Typography>
+              <DatePicker
+                  multiple={false}
+                  value={chosenDate}
+                  name='chosenDate'
+                  onChange={setChosenDate}
+                  format='DD.MM.YYYY'
+                  render={<Icon />}
+              />
+            </Stack>
+            <Stack direction='row' sx={{marginTop: 20}}>
+              <Typography variant='h5' sx={{ mr: '2vw' }} >Choose time: </Typography>
+              <input
+                  placeholder='Time'
+                  type='time'
+                  name='time'
+                  required
+                  value={values.time}
+                  onChange={handleChange}
+              />
+            </Stack>
+            <Stack direction='row' sx={{marginTop: 20}}>
+              <Typography variant='h5' sx={{ mr: '2vw' }} >Event description: </Typography>
+              <TextField
+                  variant='outlined'
+                  label='description'
+                  name='description'
+                  required
+                  value={values.description}
+                  onChange={handleChange}
+              />
+            </Stack>
+            <Stack direction='row' sx={{marginTop: 20}}>
+              <Typography variant='h5' sx={{ mr: '2vw' }} >Repeatability: </Typography>
+              <Select
+                  label='arbitrary'
+                  value={repetition}
+                  onChange={handleRepetitionChange}
+              >
+                <MenuItem value='one-time'>One-time</MenuItem>
+                <MenuItem value='DAILY'>Daily</MenuItem>
+                <MenuItem value='WEEKLY'>Weekly</MenuItem>
+                <MenuItem value='MONTHLY'>Monthly</MenuItem>
+                <MenuItem value='YEARLY'>Yearly</MenuItem>
+              </Select>
+            </Stack>
+            <Stack direction='row' sx={{marginTop: 20}}>
+              {repetition !== 'one-time' && (
+                  <>
+                    <Typography variant='h5' sx={{mr: '2vw'}}>End date: </Typography>
+                    <DatePicker
+                        multiple={false}
+                        value={endDate}
+                        name='endDate'
+                        onChange={handleEndDateChange}
+                        format='DD.MM.YYYY'
+                        render={<Icon />}
+                    />
+                  </>
+              )}
+            </Stack>
             <Button
                 variant='contained'
                 type='submit'
-                sx={{ bgcolor: 'general.lightGreen', ':hover': { bgcolor: 'general.hoverGreen' } }}
+                sx={{ bgcolor: 'general.lightGreen', ':hover': { bgcolor: 'general.hoverGreen' }, marginTop: 20 }}
             >
               Add event
             </Button>
