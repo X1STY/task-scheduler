@@ -28,11 +28,17 @@ const SchedulerDisplay = () => {
     }
   );
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Typography
+        variant='h4'
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      >
+        Loading...
+      </Typography>
+    );
   }
 
   const groupedData = groupEventsByDates(data.data);
-  // console.log(popUpData);
   return (
     <Stack
       direction='column'
@@ -80,14 +86,13 @@ const SchedulerDisplay = () => {
               <IconButton sx={{ mt: '-1vh' }} onClick={() => handleDeleteEvent(event.id)}>
                 <DeleteIcon />
               </IconButton>
-
-              <PopUpForm openForm={openForm} setOpenForm={setOpenForm} title={'Change event data'}>
-                <EditEventForm value={popUpData} />
-              </PopUpForm>
             </Stack>
           ))}
         </div>
       ))}
+      <PopUpForm openForm={openForm} setOpenForm={setOpenForm} title={'Change event data'}>
+        <EditEventForm value={popUpData} />
+      </PopUpForm>
     </Stack>
   );
 };
