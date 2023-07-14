@@ -3,7 +3,6 @@ import { Box, Dialog, DialogContent, DialogTitle, IconButton, Typography } from 
 
 export const PopUpForm = (props) => {
   const { children, title, openForm, setOpenForm } = props;
-  // console.log(value);
   return (
     <Dialog open={openForm}>
       <DialogTitle>

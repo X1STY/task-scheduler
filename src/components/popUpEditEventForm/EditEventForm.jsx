@@ -17,7 +17,6 @@ export const EditEventForm = (props) => {
   const [id] = useState(value.event.id);
   const changeEventMutation = useMutation(changeEventById);
   const queryClient = useQueryClient();
-  // console.log(value);
   const handleSubmit = (e) => {
     e.preventDefault();
     const updatedEvent = {
@@ -34,7 +33,6 @@ export const EditEventForm = (props) => {
         }
       }
     );
-    console.log(updatedEvent);
   };
 
   return (
