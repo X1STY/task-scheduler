@@ -7,6 +7,7 @@ import { IconButton, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
 import { getUserEvents } from '../../utils/requests/UserEvents';
+import { EditEventForm } from '../popUpEditEventForm/EditEventForm';
 import { PopUpForm } from '../popUpEditEventForm/PopUpForm';
 
 import { dayOfWeek, groupEventsByDates } from './groupEventsByDates';
@@ -14,7 +15,8 @@ import useScheduler from './useScheduler';
 
 const SchedulerDisplay = () => {
   const [values, setValues] = useState();
-  const { startDate, endDate, setDates, handleDeleteEvent } = useScheduler();
+  const { startDate, endDate, setDates, handleDeleteEvent, handleEditEvent, popUpData } =
+    useScheduler();
   const [openForm, setOpenForm] = useState(false);
 
   const { data, isLoading } = useQuery(
@@ -30,7 +32,7 @@ const SchedulerDisplay = () => {
   }
 
   const groupedData = groupEventsByDates(data.data);
-
+  // console.log(popUpData);
   return (
     <Stack
       direction='column'
@@ -64,20 +66,24 @@ const SchedulerDisplay = () => {
               <Typography
                 variant='h5'
                 sx={{ mb: '1vh' }}
-              >{`${event.time} ${event.desc}`}</Typography>
+              >{`${event.time} ${event.description}`}</Typography>
               <IconButton
                 sx={{ mt: '-1vh' }}
                 onClick={() => {
+                  handleEditEvent(date, event);
                   setOpenForm(true);
                 }}
               >
                 <EditIcon />
               </IconButton>
+
               <IconButton sx={{ mt: '-1vh' }} onClick={() => handleDeleteEvent(event.id)}>
                 <DeleteIcon />
               </IconButton>
 
-              <PopUpForm openForm={openForm} setOpenForm={setOpenForm}></PopUpForm>
+              <PopUpForm openForm={openForm} setOpenForm={setOpenForm} title={'Change event data'}>
+                <EditEventForm value={popUpData} />
+              </PopUpForm>
             </Stack>
           ))}
         </div>

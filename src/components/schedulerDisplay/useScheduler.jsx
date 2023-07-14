@@ -12,6 +12,7 @@ const useScheduler = () => {
   const [endDate, setEndDate] = useState(newDateToStringFormatWithDefis(new Date('2023-08-31')));
   const mutation = useMutation(deleteEventById);
   const queryClient = useQueryClient();
+  const [popUpData, setPopUpData] = useState();
   const handleDeleteEvent = async (id) => {
     try {
       mutation.mutate(id, {
@@ -24,12 +25,22 @@ const useScheduler = () => {
     }
   };
 
+  const handleEditEvent = (date, event) => {
+    setPopUpData({ date: date, event: event });
+  };
+
   const setDates = (values) => {
     setStartDate(values[0].format());
     setEndDate(values[1].format());
   };
-
-  return { startDate, endDate, setDates, handleDeleteEvent };
+  return {
+    startDate,
+    endDate,
+    setDates,
+    handleDeleteEvent,
+    handleEditEvent,
+    popUpData
+  };
 };
 
 export default useScheduler;

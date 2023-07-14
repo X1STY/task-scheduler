@@ -28,7 +28,7 @@ export const groupEventsByDates = (date) =>
     }
     groupedByDateEvent[date].push({
       time: currValue.time,
-      desc: currValue.description,
+      description: currValue.description,
       id: currValue.event_id
     });
 
