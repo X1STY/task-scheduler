@@ -13,7 +13,6 @@ const HeaderBar = () => {
   const logoutFun = () => {
     localStorage.removeItem('token');
     setAuth({ token: null, isAuth: false });
-    console.log(auth);
     navigate('/login');
   };
 
