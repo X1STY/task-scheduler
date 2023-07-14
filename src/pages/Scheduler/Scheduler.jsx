@@ -3,6 +3,7 @@ import DatePicker from 'react-multi-date-picker';
 import Icon from 'react-multi-date-picker/components/icon';
 import { Box, Button, Grid, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import Icon from 'react-multi-date-picker/components/icon';
 
 import { newDateToStringFormatWithDefis } from '../../components/schedulerDisplay/groupEventsByDates';
 import SchedulerDisplay from '../../components/schedulerDisplay/SchedulerDisplay';
