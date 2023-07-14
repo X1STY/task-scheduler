@@ -74,6 +74,7 @@ const Login = () => {
                     render={({field}) => (
                         <TextField
                             label="Enter email"
+                            type="email"
                             onChange={(e) => field.onChange(e)}
                             value={field.value}
                             size="small"
@@ -92,6 +93,7 @@ const Login = () => {
                     render={({field}) => (
                         <TextField
                             label="Enter password"
+                            type="password"
                             onChange={(e) => field.onChange(e)}
                             value={field.value}
                             size="small"
