@@ -3,7 +3,7 @@ import DatePicker from 'react-multi-date-picker';
 import Icon from 'react-multi-date-picker/components/icon';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { IconButton, Stack, Typography } from '@mui/material';
+import { Box, IconButton, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
 import { getUserEvents } from '../../utils/requests/UserEvents';
@@ -23,8 +23,7 @@ const SchedulerDisplay = () => {
     ['events', startDate, endDate],
     () => getUserEvents(startDate, endDate),
     {
-      refetchOnWindowFocus: false,
-      keepPreviousData: true
+      refetchOnWindowFocus: false
     }
   );
   if (isLoading) {
@@ -43,7 +42,7 @@ const SchedulerDisplay = () => {
     <Stack
       direction='column'
       sx={{
-        mt: 45,
+        mt: 38,
         ml: '12vw',
         height: '100vh',
         width: '50vw',
@@ -54,14 +53,16 @@ const SchedulerDisplay = () => {
         <Typography variant='h5' sx={{ mr: '2vw' }}>
           Выберете диапазон дат для отображения ивентов
         </Typography>
-        <DatePicker
-          range
-          value={values}
-          onChange={setValues}
-          onClose={() => setDates(values)}
-          format='DD.MM.YYYY'
-          render={<Icon />}
-        />
+        <Box sx={{ textAlign: 'center' }}>
+          <DatePicker
+            range
+            value={values}
+            onChange={setValues}
+            onClose={() => setDates(values)}
+            format='DD.MM.YYYY'
+            render={<Icon />}
+          />
+        </Box>
       </Stack>
 
       {Object.entries(groupedData).map(([date, events]) => (

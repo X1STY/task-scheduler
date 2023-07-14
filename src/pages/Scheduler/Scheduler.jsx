@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import DatePicker from 'react-multi-date-picker';
-import { Box, Button, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
+import Icon from 'react-multi-date-picker/components/icon';
+import { Box, Button, Grid, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { newDateToStringFormatWithDefis } from '../../components/schedulerDisplay/groupEventsByDates';
@@ -19,7 +20,6 @@ export const Scheduler = () => {
   const queryClient = useQueryClient();
   const addOnceTimeEventMutation = useMutation(addNewEvent);
   const addReplyedTimeEventMutation = useMutation(addNewEventWithReply);
-
   const { values, handleChange, resetForm, handleSubmit } = useForm(
     { time: '', description: '' },
     async (values) => {
@@ -64,13 +64,6 @@ export const Scheduler = () => {
             }
           });
         }
-        addOnceTimeEventMutation.mutate(newEvent, {
-          onSuccess: () => {
-            queryClient.invalidateQueries(['events']);
-            resetForm();
-            setChosenDate(new Date());
-          }
-        });
       } catch (error) {
         return error;
       }
@@ -92,72 +85,109 @@ export const Scheduler = () => {
         <Box>
           <SchedulerDisplay />
         </Box>
-        <form
-          className='form'
-          onSubmit={handleSubmit}
-          style={{ height: '100vh', width: '30vw', position: 'fixed', marginLeft: '65vw' }}
+
+        <Grid
+          container
+          direction='column'
+          justifyContent='center'
+          style={{ marginLeft: '65vw', marginTop: '10vh', position: 'fixed' }}
         >
-          <Typography variant='body1'>Choose date(s):</Typography>
-          <DatePicker
-            multiple={false}
-            value={chosenDate}
-            name='chosenDate'
-            onChange={setChosenDate}
-            format='DD.MM.YYYY'
-          />
-          <Typography variant='body1'>Choose time:</Typography>
-          <input
-            placeholder='Time'
-            type='time'
-            name='time'
-            required
-            value={values.time}
-            onChange={handleChange}
-          />
-          <Typography variant='body1'>Event description</Typography>
-          <TextField
-            variant='outlined'
-            label='description'
-            name='description'
-            required
-            value={values.description}
-            onChange={handleChange}
-          />
-          <Typography variant='body1'>Repeatability</Typography>
-          <Select
-            label='arbitrary'
-            //onChange={handleChange}
-            value={repetition}
-            onChange={handleRepetitionChange}
-          >
-            <MenuItem value='one-time'>One-time</MenuItem>
-            <MenuItem value='DAILY'>Daily</MenuItem>
-            <MenuItem value='WEEKLY'>Weekly</MenuItem>
-            <MenuItem value='MONTHLY'>Monthly</MenuItem>
-            <MenuItem value='YEARLY'>Yearly</MenuItem>
-          </Select>
-          <Typography variant='body1'>Repeatability</Typography>
-          {repetition !== 'one-time' && (
-            <>
-              <Typography variant='body1'>End date:</Typography>
+          <Grid item xs={6}>
+            <Stack direction='row' sx={{ display: 'flex', textAlign: 'top', alignItems: 'top' }}>
+              <Typography
+                variant='h5'
+                sx={{ textAlign: 'center', marginRight: '2vw', marginBottom: '4vh' }}
+              >
+                Выберите дату начала:
+              </Typography>
               <DatePicker
                 multiple={false}
-                value={endDate}
-                name='endDate'
-                onChange={handleEndDateChange}
+                value={chosenDate}
+                name='chosenDate'
+                onChange={setChosenDate}
                 format='DD.MM.YYYY'
+                render={<Icon />}
               />
-            </>
-          )}
-          <Button
-            variant='contained'
-            type='submit'
-            sx={{ bgcolor: 'general.lightGreen', ':hover': { bgcolor: 'general.hoverGreen' } }}
-          >
-            Add event
-          </Button>
-        </form>
+            </Stack>
+            <Stack direction='row'>
+              <Typography variant='h5' style={{ marginRight: '2vw', marginBottom: '4vh' }}>
+                Выберите время:
+              </Typography>
+              <input
+                style={{ maxHeight: '3vh' }}
+                placeholder='Time'
+                type='time'
+                name='time'
+                required
+                value={values.time}
+                onChange={handleChange}
+              />
+            </Stack>
+            <Typography variant='h5' style={{ marginRight: '2vw', marginBottom: '2vh' }}>
+              Введите описание ивента:
+            </Typography>
+            <TextField
+              variant='outlined'
+              label='description'
+              name='description'
+              required
+              value={values.description}
+              onChange={handleChange}
+              style={{ marginBottom: '4vh', width: '20vw' }}
+            />
+            <Stack direction='row'>
+              <Typography variant='h5' style={{ marginRight: '2vw', alignSelf: 'center' }}>
+                Повторяемость:
+              </Typography>
+              <Select
+                label='Arbitrary'
+                value={repetition}
+                onChange={handleRepetitionChange}
+                sx={{ width: '8.3vw' }}
+              >
+                <MenuItem value='one-time'>One-time</MenuItem>
+                <MenuItem value='DAILY'>Daily</MenuItem>
+                <MenuItem value='WEEKLY'>Weekly</MenuItem>
+                <MenuItem value='MONTHLY'>Monthly</MenuItem>
+                <MenuItem value='YEARLY'>Yearly</MenuItem>
+              </Select>
+            </Stack>
+            <Stack direction='row' sx={{ mt: '3vh' }}>
+              {repetition !== 'one-time' && (
+                <>
+                  <Typography variant='h5' sx={{ mr: '0.75vw' }}>
+                    Дата окончания:
+                  </Typography>
+                  <Box>
+                    <DatePicker
+                      multiple={false}
+                      value={endDate}
+                      name='endDate'
+                      onChange={handleEndDateChange}
+                      format='DD.MM.YYYY'
+                      render={<Icon />}
+                    />
+                  </Box>
+                </>
+              )}
+            </Stack>
+          </Grid>
+        </Grid>
       </Stack>
+      <Button
+        variant='contained'
+        type='submit'
+        sx={{
+          bgcolor: 'general.lightGreen',
+          ':hover': { bgcolor: 'general.hoverGreen' },
+          marginTop: '57vh',
+          ml: '72vw',
+          position: 'fixed'
+        }}
+        onClick={handleSubmit}
+      >
+        Add event
+      </Button>
     </>
   );
 };
