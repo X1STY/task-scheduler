@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { deleteEventById } from '../../utils/requests/UserEvents';
+import { deleteEventById, deleteEventGroup } from '../../utils/requests/UserEvents';
 
 import { newDateToStringFormatWithDefis } from './groupEventsByDates';
 
@@ -10,12 +10,25 @@ const useScheduler = () => {
     newDateToStringFormatWithDefis(new Date('2023-07-01'))
   );
   const [endDate, setEndDate] = useState(newDateToStringFormatWithDefis(new Date('2023-08-31')));
-  const mutation = useMutation(deleteEventById);
+  const deleteEventMutation = useMutation(deleteEventById);
+  const deleteEventGroupMutation = useMutation(deleteEventGroup);
   const queryClient = useQueryClient();
   const [popUpData, setPopUpData] = useState();
   const handleDeleteEvent = async (id) => {
     try {
-      mutation.mutate(id, {
+      deleteEventMutation.mutate(id, {
+        onSuccess: () => {
+          queryClient.invalidateQueries(['events']);
+        }
+      });
+    } catch (error) {
+      return error;
+    }
+  };
+
+  const handleDeleteEventGroup = async (id) => {
+    try {
+      deleteEventGroupMutation.mutate(id, {
         onSuccess: () => {
           queryClient.invalidateQueries(['events']);
         }
@@ -38,6 +51,7 @@ const useScheduler = () => {
     endDate,
     setDates,
     handleDeleteEvent,
+    handleDeleteEventGroup,
     handleEditEvent,
     popUpData
   };

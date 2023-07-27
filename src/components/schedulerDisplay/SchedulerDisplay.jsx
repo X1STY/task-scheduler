@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import DatePicker from 'react-multi-date-picker';
 import Icon from 'react-multi-date-picker/components/icon';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
-import { Box, IconButton, Stack, Typography } from '@mui/material';
+import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
 import { getUserEvents } from '../../utils/requests/UserEvents';
@@ -15,8 +16,15 @@ import useScheduler from './useScheduler';
 
 const SchedulerDisplay = () => {
   const [values, setValues] = useState();
-  const { startDate, endDate, setDates, handleDeleteEvent, handleEditEvent, popUpData } =
-    useScheduler();
+  const {
+    startDate,
+    endDate,
+    setDates,
+    handleDeleteEvent,
+    handleDeleteEventGroup,
+    handleEditEvent,
+    popUpData
+  } = useScheduler();
   const [openForm, setOpenForm] = useState(false);
 
   const { data, isLoading } = useQuery(
@@ -74,25 +82,40 @@ const SchedulerDisplay = () => {
                 variant='h5'
                 sx={{ mb: '1vh' }}
               >{`${event.time} ${event.description}`}</Typography>
-              <IconButton
-                sx={{ mt: '-1vh' }}
-                onClick={() => {
-                  handleEditEvent(date, event);
-                  setOpenForm(true);
-                }}
-              >
-                <EditIcon />
-              </IconButton>
+              <Tooltip title='Edit information about event'>
+                <IconButton
+                  sx={{ mt: '-1vh' }}
+                  onClick={() => {
+                    handleEditEvent(date, event);
+                    setOpenForm(true);
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
 
-              <IconButton sx={{ mt: '-1vh' }} onClick={() => handleDeleteEvent(event.id)}>
-                <DeleteIcon />
-              </IconButton>
+              <Tooltip title='Delete single event'>
+                <IconButton sx={{ mt: '-1vh' }} onClick={() => handleDeleteEvent(event.id)}>
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+
+              {event.is_replayed && (
+                <Tooltip title='Delete all event group'>
+                  <IconButton
+                    sx={{ mt: '-1vh' }}
+                    onClick={() => handleDeleteEventGroup(event.event_group_id)}
+                  >
+                    <DeleteForeverIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
             </Stack>
           ))}
         </div>
       ))}
       <PopUpForm openForm={openForm} setOpenForm={setOpenForm} title={'Change event data'}>
-        <EditEventForm value={popUpData} />
+        <EditEventForm value={popUpData} setOpenForm={setOpenForm} />
       </PopUpForm>
     </Stack>
   );

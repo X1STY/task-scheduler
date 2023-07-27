@@ -1,31 +1,41 @@
 import { useState } from 'react';
 import DatePicker from 'react-multi-date-picker';
-import { Button, Stack, TextField } from '@mui/material';
+import { Button, Checkbox, FormControl, FormControlLabel, Stack, TextField } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { changeEventById } from '../../utils/requests/UserEvents';
+import { changeEventById, changeEventGroup } from '../../utils/requests/UserEvents';
 import {
   formatDateToStandart,
   newDateToStringFormatWithDefis
 } from '../schedulerDisplay/groupEventsByDates';
 
 export const EditEventForm = (props) => {
-  const { value } = props;
+  const { value, setOpenForm } = props;
   const [date, setDate] = useState(formatDateToStandart(value.date));
   const [time, setTime] = useState(value.event.time);
   const [description, setDescription] = useState(value.event.description);
+  const [is_replayed] = useState(value.event.is_replayed);
   const [id] = useState(value.event.id);
+  const [event_group_id] = useState(value.event.event_group_id);
+  const [checked, setChecked] = useState(false);
   const changeEventMutation = useMutation(changeEventById);
+  const changeEventGroupMutation = useMutation(changeEventGroup);
   const queryClient = useQueryClient();
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const updatedEvent = {
-      date: newDateToStringFormatWithDefis(new Date(date)),
-      time: time,
-      description: description
-    };
 
-    changeEventMutation.mutate(
+  const editEventGroup = async (updatedEvent) => {
+    console.log(event_group_id);
+    await changeEventGroupMutation.mutate(
+      { event_group_id, updatedEvent },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(['events']);
+        }
+      }
+    );
+  };
+
+  const editEvent = async (updatedEvent) => {
+    await changeEventMutation.mutate(
       { id, updatedEvent },
       {
         onSuccess: () => {
@@ -33,6 +43,29 @@ export const EditEventForm = (props) => {
         }
       }
     );
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let updatedEvent;
+    if (checked) {
+      updatedEvent = {
+        time: time,
+        description: description
+      };
+      editEventGroup(updatedEvent);
+    } else {
+      updatedEvent = {
+        date: newDateToStringFormatWithDefis(new Date(date)),
+        time: time,
+        description: description
+      };
+      editEvent(updatedEvent);
+    }
+    console.log(updatedEvent);
+  };
+  const handleChangeCheckBox = (e) => {
+    setChecked(e.target.checked);
   };
 
   return (
@@ -53,8 +86,34 @@ export const EditEventForm = (props) => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
-          <Stack direction='row'>
-            <Button variant='contained' color='primary' type='submit' sx={{ mt: 20, ml: 10 }}>
+          {is_replayed && (
+            <FormControl sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <FormControlLabel
+                label='Change for event group'
+                value='end'
+                control={
+                  <Checkbox
+                    checked={checked}
+                    onChange={handleChangeCheckBox}
+                    inputProps={{ 'aria-label': 'controlled' }}
+                  />
+                }
+              />
+            </FormControl>
+          )}
+
+          <Stack
+            direction='row'
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 10 }}
+          >
+            <Button
+              variant='contained'
+              color='primary'
+              type='submit'
+              onClick={() => {
+                setOpenForm(false);
+              }}
+            >
               Submit
             </Button>
           </Stack>

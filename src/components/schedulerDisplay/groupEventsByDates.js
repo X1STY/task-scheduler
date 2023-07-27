@@ -29,7 +29,9 @@ export const groupEventsByDates = (date) =>
     groupedByDateEvent[date].push({
       time: currValue.time,
       description: currValue.description,
-      id: currValue.event_id
+      id: currValue.event_id,
+      event_group_id: currValue.event_group_id,
+      is_replayed: currValue.is_replayed
     });
 
     return groupedByDateEvent;
