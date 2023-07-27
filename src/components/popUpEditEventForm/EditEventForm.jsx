@@ -23,7 +23,6 @@ export const EditEventForm = (props) => {
   const queryClient = useQueryClient();
 
   const editEventGroup = async (updatedEvent) => {
-    console.log(event_group_id);
     await changeEventGroupMutation.mutate(
       { event_group_id, updatedEvent },
       {
@@ -62,7 +61,6 @@ export const EditEventForm = (props) => {
       };
       editEvent(updatedEvent);
     }
-    console.log(updatedEvent);
   };
   const handleChangeCheckBox = (e) => {
     setChecked(e.target.checked);
