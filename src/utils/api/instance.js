@@ -6,6 +6,6 @@ const instance = axios.create({
   baseURL: 'http://localhost:1111/api'
 });
 
-instance.defaults.headers.common['access-token'] = `${localStorage.getItem('token')}`;
+instance.defaults.headers.common['access_token'] = `${localStorage.getItem('token')}`;
 
 export default instance;

@@ -1,16 +1,39 @@
-import { Box, Button, List, ListItem } from '@mui/material';
+import { Box, Button, List, ListItem, Typography } from '@mui/material';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-const sections = [
-  { sectionName: 'section 1' },
-  { sectionName: 'section 2' },
-  { sectionName: 'section 3' }, //temp
-  { sectionName: 'section 4' },
-  { sectionName: 'section 5' },
-  { sectionName: 'section 6' },
-  { sectionName: 'section 7' }
-];
+import { getEventsInSection, getUserSections } from '../../utils/requests/UserSections';
+import useScheduler from '../schedulerDisplay/useScheduler';
 
 const Sidebar = () => {
+  const { startDate, endDate } = useScheduler();
+  const { data, isLoading } = useQuery(['sections'], () => getUserSections(), {
+    refetchOnWindowFocus: false
+  });
+  const getEventsFromSectionMutation = useMutation(getEventsInSection);
+  const queryClient = useQueryClient();
+
+  const handleChangeSection = (e, id) => {
+    e.preventDefault();
+    console.log(id);
+    getEventsFromSectionMutation.mutate(id, {
+      onSuccess: (response) => {
+        queryClient.invalidateQueries(['events', startDate, endDate]);
+        console.log(response);
+      }
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <Typography
+        variant='h4'
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      >
+        Loading...
+      </Typography>
+    );
+  }
+  const sections = data.data;
   return (
     <Box sx={{ height: '100vh', width: '12vw', position: 'fixed', mt: 24 }}>
       <>
@@ -32,17 +55,19 @@ const Sidebar = () => {
           {sections.map((val, key) => {
             return (
               <ListItem
+                onClick={(e) => handleChangeSection(e, val.section_id)}
                 key={key}
                 sx={{
+                  cursor: 'pointer',
                   margin: 0,
                   display: 'flex',
                   justifyContent: 'center',
-                  alignItems: 'center',
+                  alignItems: 'start',
                   fontSize: 24,
                   ':hover': { bgcolor: 'general.lightGreen' }
                 }}
               >
-                <Box>{val.sectionName}</Box>
+                <Typography fontSize='1.5rem'>{val.title}</Typography>
               </ListItem>
             );
           })}

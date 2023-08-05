@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import DatePicker from 'react-multi-date-picker';
 import Icon from 'react-multi-date-picker/components/icon';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -44,7 +44,6 @@ const SchedulerDisplay = () => {
       </Typography>
     );
   }
-
   const groupedData = groupEventsByDates(data.data);
   return (
     <Stack
