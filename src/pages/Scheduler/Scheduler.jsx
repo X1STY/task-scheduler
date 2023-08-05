@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { newDateToStringFormatWithDefis } from '../../components/schedulerDisplay/groupEventsByDates';
 import SchedulerDisplay from '../../components/schedulerDisplay/SchedulerDisplay';
+import SectionEvents from '../../components/schedulerDisplay/SectionEvents';
 import Sidebar from '../../components/sideBar/SideBar';
 import useForm from '../../utils/hooks/useForm';
 import { addNewEvent, addNewEventWithReply } from '../../utils/requests/UserEvents';
@@ -16,6 +17,10 @@ export const Scheduler = () => {
   const [chosenDate, setChosenDate] = useState(new Date());
   const [repetition, setRepetition] = useState('one-time');
   const [endDate, setEndDate] = useState(null);
+  const [chosenSection, setChosenSection] = useState(null);
+  const handleChangeSection = (e, id) => {
+    setChosenSection(id);
+  };
 
   const queryClient = useQueryClient();
   const addOnceTimeEventMutation = useMutation(addNewEvent);
@@ -81,9 +86,13 @@ export const Scheduler = () => {
   return (
     <>
       <Stack direction='row'>
-        <Sidebar />
+        <Sidebar changeSection={handleChangeSection} />
         <Box>
-          <SchedulerDisplay />
+          {chosenSection ? (
+            <SectionEvents id={chosenSection} changeSection={handleChangeSection} />
+          ) : (
+            <SchedulerDisplay />
+          )}
         </Box>
 
         <Grid

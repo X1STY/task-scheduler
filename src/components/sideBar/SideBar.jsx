@@ -1,28 +1,17 @@
 import { Box, Button, List, ListItem, Typography } from '@mui/material';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
-import { getEventsInSection, getUserSections } from '../../utils/requests/UserSections';
-import useScheduler from '../schedulerDisplay/useScheduler';
+import { getUserSections } from '../../utils/requests/UserSections';
 
-const Sidebar = () => {
-  const { startDate, endDate } = useScheduler();
+const Sidebar = ({ changeSection }) => {
   const { data, isLoading } = useQuery(['sections'], () => getUserSections(), {
     refetchOnWindowFocus: false
   });
-  const getEventsFromSectionMutation = useMutation(getEventsInSection);
-  const queryClient = useQueryClient();
 
   const handleChangeSection = (e, id) => {
     e.preventDefault();
-    console.log(id);
-    getEventsFromSectionMutation.mutate(id, {
-      onSuccess: (response) => {
-        queryClient.invalidateQueries(['events', startDate, endDate]);
-        console.log(response);
-      }
-    });
+    changeSection(e, id);
   };
-
   if (isLoading) {
     return (
       <Typography
@@ -67,7 +56,7 @@ const Sidebar = () => {
                   ':hover': { bgcolor: 'general.lightGreen' }
                 }}
               >
-                <Typography fontSize='1.5rem'>{val.title}</Typography>
+                <Typography fontSize='1.5rem'>{val.titile !== 'School' && val.title}</Typography>
               </ListItem>
             );
           })}

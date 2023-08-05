@@ -1,31 +1,17 @@
 import { useState } from 'react';
 import DatePicker from 'react-multi-date-picker';
 import Icon from 'react-multi-date-picker/components/icon';
-import DeleteIcon from '@mui/icons-material/Delete';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import EditIcon from '@mui/icons-material/Edit';
-import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
 import { getUserEvents } from '../../utils/requests/UserEvents';
-import { EditEventForm } from '../popUpEditEventForm/EditEventForm';
-import { PopUpForm } from '../popUpEditEventForm/PopUpForm';
 
-import { dayOfWeek, groupEventsByDates } from './groupEventsByDates';
+import EventDisplay from './EventDisplay';
 import useScheduler from './useScheduler';
 
 const SchedulerDisplay = () => {
   const [values, setValues] = useState();
-  const {
-    startDate,
-    endDate,
-    setDates,
-    handleDeleteEvent,
-    handleDeleteEventGroup,
-    handleEditEvent,
-    popUpData
-  } = useScheduler();
-  const [openForm, setOpenForm] = useState(false);
+  const { startDate, endDate, setDates } = useScheduler();
 
   const { data, isLoading } = useQuery(
     ['events', startDate, endDate],
@@ -44,7 +30,6 @@ const SchedulerDisplay = () => {
       </Typography>
     );
   }
-  const groupedData = groupEventsByDates(data.data);
   return (
     <Stack
       direction='column'
@@ -72,50 +57,7 @@ const SchedulerDisplay = () => {
         </Box>
       </Stack>
 
-      {Object.entries(groupedData).map(([date, events]) => (
-        <div key={date}>
-          <Typography variant='h4' sx={{ mb: '1vh' }}>{`${dayOfWeek(date)} ${date}`}</Typography>
-          {events.map((event, index) => (
-            <Stack key={index} direction='row' sx={{ display: 'flex', alignItems: 'center' }}>
-              <Typography
-                variant='h5'
-                sx={{ mb: '1vh' }}
-              >{`${event.time} ${event.description}`}</Typography>
-              <Tooltip title='Edit information about event'>
-                <IconButton
-                  sx={{ mt: '-1vh' }}
-                  onClick={() => {
-                    handleEditEvent(date, event);
-                    setOpenForm(true);
-                  }}
-                >
-                  <EditIcon />
-                </IconButton>
-              </Tooltip>
-
-              <Tooltip title='Delete single event'>
-                <IconButton sx={{ mt: '-1vh' }} onClick={() => handleDeleteEvent(event.id)}>
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-
-              {event.is_replayed && (
-                <Tooltip title='Delete all event group'>
-                  <IconButton
-                    sx={{ mt: '-1vh' }}
-                    onClick={() => handleDeleteEventGroup(event.event_group_id)}
-                  >
-                    <DeleteForeverIcon />
-                  </IconButton>
-                </Tooltip>
-              )}
-            </Stack>
-          ))}
-        </div>
-      ))}
-      <PopUpForm openForm={openForm} setOpenForm={setOpenForm} title={'Change event data'}>
-        <EditEventForm value={popUpData} setOpenForm={setOpenForm} />
-      </PopUpForm>
+      <EventDisplay event={data.data} access_type={'OWNER'} />
     </Stack>
   );
 };
